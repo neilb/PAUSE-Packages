@@ -1,6 +1,4 @@
 package PAUSE::Packages::ReleaseIterator;
-use strict;
-use warnings;
 
 use Moo;
 use PAUSE::Packages;
@@ -26,7 +24,7 @@ sub next
     return undef if $eof;
 
     if (not defined $fh) {
-        open($fh, '<', $self->packages->_path());
+        open($fh, '<', $self->packages->path());
         my $inheader = 1;
 
         # Skip the header block at the top of the file
@@ -43,10 +41,16 @@ sub next
 
             my ($module_name, $version, $path) = split(/\s+/, $line);
 
-            my $module = PAUSE::Packages::Module->new(name => $module_name, version => $version);
+            my $module = PAUSE::Packages::Module->new(
+                                name => $module_name,
+                                version => $version,
+                                );
 
             if (defined($current_path) && $path ne $current_path) {
-                my $release = PAUSE::Packages::Release->new(modules => [@modules], path => $current_path);
+                my $release = PAUSE::Packages::Release->new(
+                                    modules => [@modules],
+                                    path => $current_path,
+                                    );
                 @modules = ($module);
                 $current_path = $path;
                 return $release;
@@ -57,7 +61,10 @@ sub next
         } else {
             $eof = 1;
             if (defined($current_path) && @modules > 0) {
-                return PAUSE::Packages::Release->new(modules => [@modules], path => $current_path);
+                return PAUSE::Packages::Release->new(
+                            modules => [@modules],
+                            path => $current_path,
+                            );
             }
             return undef;
         }

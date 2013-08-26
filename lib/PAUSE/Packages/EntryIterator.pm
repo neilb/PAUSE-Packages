@@ -1,6 +1,4 @@
 package PAUSE::Packages::EntryIterator;
-use strict;
-use warnings;
 
 use Moo;
 use PAUSE::Packages;
@@ -20,8 +18,7 @@ sub next
     state $fh;
 
     if (not defined $fh) {
-        open($fh, '<', $self->packages->_path());
-        my $inheader = 1;
+        open($fh, '<', $self->packages->path());
 
         # Skip the header block at the top of the file
         while (<$fh>) {
