@@ -1,4 +1,11 @@
-Revision history for perl module PAUSE::Packages
+Revision history for Perl module PAUSE::Packages
+
+0.02 2013-09-13
+    - Now process 02packages and transform into a format where all modules
+      in a release are encoded in JSON and recorded on one line.
+      Thanks to DAGOLDEN for the suggestion to use JSON.
+    - We only hold onto the latest release for each dist
+    - Dropped EntryIterator as it no longer makes sense
 
 0.01 2013-08-26
     - first release to CPAN
