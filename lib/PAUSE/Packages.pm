@@ -184,6 +184,14 @@ so you should make sure you're using 0.02 or later:
 
   use PAUSE::Packages 0.02;
 
+=head1 SEE ALSO
+
+L<Parse::CPAN::Packages> - used to parse 02packages.details.txt,
+which you must first download from CPAN.
+
+L<Parse::CPAN::Packages::Fast> - a 'largely API compatible rewrite' of
+the above module, which is claimed to be a lot faster.
+
 =head1 REPOSITORY
 
 L<https://github.com/neilbowers/PAUSE-Packages>
