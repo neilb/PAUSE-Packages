@@ -1,5 +1,10 @@
 Revision history for Perl module PAUSE::Packages
 
+0.03 2013-09-20
+    - Changed SYNOPSIS and doc to make it clear that you should require at
+      least version 0.02 of PAUSE::Packages,
+      given the changes from 0.01 to 0.02
+
 0.02 2013-09-13
     - Now process 02packages and transform into a format where all modules
       in a release are encoded in JSON and recorded on one line.

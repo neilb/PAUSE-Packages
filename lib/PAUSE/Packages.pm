@@ -139,7 +139,7 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
 
 =head1 SYNOPSIS
 
-  use PAUSE::Packages;
+  use PAUSE::Packages 0.02;
 
   my $pp       = PAUSE::Packages->new;
   my $iterator = $pp->release_iterator();
@@ -178,6 +178,11 @@ be efficiently processed by an iterator.
 
 The interface for this distribution is very much still in flux,
 as is the documentation. More of the latter will be coming soon.
+
+B<Note>: the behaviour of this module changed between version 0.01 and 0.02,
+so you should make sure you're using 0.02 or later:
+
+  use PAUSE::Packages 0.02;
 
 =head1 REPOSITORY
 
