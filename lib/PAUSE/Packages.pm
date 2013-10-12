@@ -6,8 +6,11 @@ use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
 use CPAN::DistnameInfo;
+use PAUSE::Packages::Module;
+use PAUSE::Packages::Release;
 use Carp;
 use autodie qw(open);
+use JSON;
 
 my $DISTNAME = '{{ $dist->name }}';
 my $BASENAME = '02packages.details.txt';
@@ -37,6 +40,43 @@ sub release_iterator
 
     require PAUSE::Packages::ReleaseIterator;
     return PAUSE::Packages::ReleaseIterator->new( packages => $self );
+}
+
+sub release
+{
+    my $self     = shift;
+    my $distname = shift;
+    my $fh;
+    local $_;
+
+    open($fh, '<', $self->path);
+    while (<$fh>) {
+        last if /^$/;
+    }
+    while (<$fh>) {
+        chomp;
+        my ($path, $json) = split(/\s+/, $_, 2);
+        my $di = CPAN::DistnameInfo->new($path);
+        next RELEASE if !defined($di) || !defined($di->dist);
+        last if $di->dist gt $distname;
+        if ($di->dist eq $distname) {
+            my $modules = [];
+            foreach my $entry (@{ decode_json($json) }) {
+                my $module = PAUSE::Packages::Module->new(
+                                name    => $entry->[0],
+                                version => $entry->[1],
+                             );
+                push(@$modules, $module);
+            }
+            return PAUSE::Packages::Release->new(
+                                 modules => $modules,
+                                    path => $path,
+                                distinfo => $di,
+                                );
+        }
+    }
+    close($fh);
+    return undef;
 }
 
 sub BUILD
@@ -148,6 +188,8 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
     print 'path = ', $release->path, "\n";
     print '   modules = ', join(', ', @{ $release->modules }), "\n";
   }
+  
+  $release = $pp->release('Module-Path');
 
 =head1 DESCRIPTION
 
@@ -177,9 +219,22 @@ be efficiently processed by an iterator.
 =back
 
 The interface for this distribution is very much still in flux,
-as is the documentation. More of the latter will be coming soon.
+as is the documentation.
 
-B<Note>: the behaviour of this module changed between version 0.01 and 0.02,
+=head1 METHODS
+
+=head2 release_iterator()
+
+See the SYNOPSIS.
+
+=head2 release($DISTNAME)
+
+Takes a dist name and returns an instance of L<PAUSE::Packages::Release>,
+or C<undef> if a release couldn't be found for the specified distname.
+
+=head1 NOTE
+
+The behaviour of this module changed between version 0.01 and 0.02,
 so you should make sure you're using 0.02 or later:
 
   use PAUSE::Packages 0.02;

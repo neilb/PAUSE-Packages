@@ -1,5 +1,9 @@
 Revision history for Perl module PAUSE::Packages
 
+0.04 2013-10-12
+    - Added a release() method, which takes a dist name and returns
+      a PAUSE::Packages::Release for the latest release of that dist.
+
 0.03 2013-09-20
     - Changed SYNOPSIS and doc to make it clear that you should require at
       least version 0.02 of PAUSE::Packages,
