@@ -1,5 +1,6 @@
 package PAUSE::Packages;
 
+use 5.10.0;
 use Moo;
 use File::HomeDir;
 use File::Spec::Functions 'catfile';

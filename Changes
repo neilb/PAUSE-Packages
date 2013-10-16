@@ -1,5 +1,8 @@
 Revision history for Perl module PAUSE::Packages
 
+0.05 2013-10-16
+    - Specified min version of perl in each module
+
 0.04 2013-10-12
     - Added a release() method, which takes a dist name and returns
       a PAUSE::Packages::Release for the latest release of that dist.

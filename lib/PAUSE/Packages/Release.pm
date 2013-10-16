@@ -1,5 +1,6 @@
 package PAUSE::Packages::Release;
 
+use 5.10.0;
 use Moo;
 use CPAN::DistnameInfo;
 
