@@ -27,14 +27,6 @@ has 'path' =>
      is      => 'rw',
     );
 
-sub entry_iterator
-{
-    my $self = shift;
-
-    require PAUSE::Packages::EntryIterator;
-    return PAUSE::Packages::EntryIterator->new( packages => $self );
-}
-
 sub release_iterator
 {
     my $self = shift;

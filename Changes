@@ -1,5 +1,10 @@
 Revision history for Perl module PAUSE::Packages
 
+0.06 2013-11-26
+    - Still had entry_iterator() function, which was referring to
+      PAUSE::Packages::EntryIterator. Caused failures due to missing
+      pre-req.
+
 0.05 2013-10-16
     - Specified min version of perl in each module
 
