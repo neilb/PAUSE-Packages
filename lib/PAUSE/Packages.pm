@@ -234,11 +234,28 @@ so you should make sure you're using 0.02 or later:
 
 =head1 SEE ALSO
 
-L<Parse::CPAN::Packages> - used to parse 02packages.details.txt,
-which you must first download from CPAN.
+There are at least three other modules on CPAN
+for parsing 02packages.details.txt.
+There are two main differences between these modules and PAUSE::Packages:
+(1) you have to download 02packages yourself, and
+(2) if there are multiple releases of a dist on CPAN, containing different modules (eg due to refactoring), then you'll see the union of all modules, instead of just the modules in the most recent release.
+
+=over 4
+
+=item *
+
+L<Parse::CPAN::Packages>
+
+=item *
 
 L<Parse::CPAN::Packages::Fast> - a 'largely API compatible rewrite' of
 the above module, which is claimed to be a lot faster.
+
+=item *
+
+L<Parse::CPAN::Perms>
+
+=back
 
 =head1 REPOSITORY
 
