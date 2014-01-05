@@ -177,7 +177,7 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
   my $pp       = PAUSE::Packages->new;
   my $iterator = $pp->release_iterator();
 
-  foreach my $release ($iterator->next) {
+  while (my $release = $iterator->next_release) {
     print 'path = ', $release->path, "\n";
     print '   modules = ', join(', ', @{ $release->modules }), "\n";
   }

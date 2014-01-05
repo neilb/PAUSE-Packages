@@ -31,7 +31,7 @@ END_EXPECTED
 
 my $string = '';
 
-while (my $release = $iterator->next_release) {
+while (my $release = $iterator->next) {
     $string .= $release->distinfo->dist
                .'|'
                .join(',', map { $_->name } @{ $release->modules })

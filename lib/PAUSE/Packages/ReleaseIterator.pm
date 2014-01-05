@@ -15,7 +15,7 @@ has 'packages' =>
         default => sub { return PAUSE::Packages->new(); },
     );
 
-sub next
+sub next_release
 {
     my $self = shift;
     my @modules;
@@ -53,5 +53,8 @@ sub next
 
     return undef;
 }
+
+# method alias for backwards compatibility
+*next = \&next_release;
 
 1;
