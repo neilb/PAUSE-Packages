@@ -17,7 +17,7 @@ ok(defined($pp), "instantiate PAUSE::Packages");
 #-----------------------------------------------------------------------
 # construct the iterator
 #-----------------------------------------------------------------------
-my $iterator = $pp->release_iterator();
+my $iterator = $pp->release_iterator(well_formed => 1);
 
 ok(defined($iterator), 'create release iterator');
 
@@ -27,7 +27,6 @@ ok(defined($iterator), 'create release iterator');
 my $expected = <<"END_EXPECTED";
 Module-Path|Module::Path
 PAUSE-Permissions|PAUSE::Permissions,PAUSE::Permissions::Module
-undef|Tie::RevRefHash
 END_EXPECTED
 
 my $string = '';

@@ -32,7 +32,7 @@ sub release_iterator
     my $self = shift;
 
     require PAUSE::Packages::ReleaseIterator;
-    return PAUSE::Packages::ReleaseIterator->new( packages => $self );
+    return PAUSE::Packages::ReleaseIterator->new( packages => $self, @_ );
 }
 
 sub release
@@ -219,6 +219,23 @@ as is the documentation.
 =head2 release_iterator()
 
 See the SYNOPSIS.
+
+This supports one optional argument, C<well_formed>,
+which if true says that the iterator should only return releases
+where the dist name and author's PAUSE id could be found:
+
+ my $iterator = PAUSE::Packages->new()->release_iterator(
+                    well_formed => 1
+                );
+
+This saves you from having to write code like the following:
+
+ while (my $release = $iterator->next_release) {
+    next unless defined($release->distinfo);
+    next unless defined($release->distinfo->dist);
+    next unless defined($release->distinfo->cpanid);
+    ...
+ }
 
 =head2 release($DISTNAME)
 
