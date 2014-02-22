@@ -1,5 +1,8 @@
 Revision history for Perl module PAUSE::Packages
 
+0.08 2014-02-22
+    - Dropped support for old method name 'next' on ReleaseIterator
+
 0.07 2014-01-05
     - ReleaseIterator method next() renamed to next_release().
       The old name will be retained for a while, for back compat.
