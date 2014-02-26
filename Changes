@@ -1,5 +1,8 @@
 Revision history for Perl module PAUSE::Packages
 
+0.08 2014-02-26
+    - Added CPAN::Common::Index to SEE ALSO (ETHER)
+
 0.08 2014-02-22
     - Added 'well_formed' option to release iterator
     - Dropped support for old method name 'next' on ReleaseIterator
