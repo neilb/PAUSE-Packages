@@ -272,6 +272,10 @@ the above module, which is claimed to be a lot faster.
 
 L<Parse::CPAN::Perms>
 
+=item *
+
+L<CPAN::Common::Index> - aims to be a common interface to all available backends
+
 =back
 
 =head1 REPOSITORY
