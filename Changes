@@ -1,7 +1,8 @@
 Revision history for Perl module PAUSE::Packages
 
 0.08 2014-02-26
-    - Added CPAN::Common::Index to SEE ALSO (ETHER)
+    - Added CPAN::Common::Index to SEE ALSO (Thanks ETHER)
+    - Added CPAN::PackageDetails to SEE ALSO
 
 0.08 2014-02-22
     - Added 'well_formed' option to release iterator

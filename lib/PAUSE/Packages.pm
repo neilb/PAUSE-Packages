@@ -276,6 +276,11 @@ L<Parse::CPAN::Perms>
 
 L<CPAN::Common::Index> - aims to be a common interface to all available backends
 
+=item *
+
+L<CPAN::PackageDetails> - can be used to read an existing copy of
+02packages.details.txt, or to create your own.
+
 =back
 
 =head1 REPOSITORY
