@@ -1,6 +1,6 @@
 Revision history for Perl module PAUSE::Packages
 
-0.08 2014-02-26
+0.09 2014-02-26
     - Added CPAN::Common::Index to SEE ALSO (Thanks ETHER)
     - Added CPAN::PackageDetails to SEE ALSO
 
