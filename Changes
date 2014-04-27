@@ -10,6 +10,7 @@ Revision history for Perl module PAUSE::Packages
       PAUSE/Packages.pm -- the '{{ $dist->name }}' resulted in broken
       cache filename when testing from the dev directory. I'm sure there's
       a better way to fix this, but this is easiest for now.
+    - Added [Git::Tag] and [Git::Push] to dist.ini
 
 0.09 2014-02-26
     - Added CPAN::Common::Index to SEE ALSO (Thanks ETHER)
