@@ -13,7 +13,7 @@ use Carp;
 use autodie qw(open);
 use JSON;
 
-my $DISTNAME = '{{ $dist->name }}';
+my $DISTNAME = 'PAUSE-Packages';
 my $BASENAME = '02packages.details.txt';
 
 has 'url' =>
@@ -214,6 +214,26 @@ be efficiently processed by an iterator.
 The interface for this distribution is very much still in flux,
 as is the documentation.
 
+=head1 constructor
+
+The constructor (C<new()>) can be passed an argument C<path>,
+along with a path to a local copy of the I<cached format> used by
+PAUSE::Packages:
+
+ $pp = PAUSE::Packages->new(path => 'mypackages.txt');
+
+Note: this is not the same format used by 02packages.details.txt,
+as described above.
+
+If you don't specify a path, then the local cache path is generated,
+and you can use the C<path> attribute to find out what it is:
+
+ $pp = PAUSE::Packages->new();
+ print "cache path = ", $pp->path, "\n";
+
+In a future release this will change: there will be separate attributes
+for the cache path and the path to your own local copy.
+
 =head1 METHODS
 
 =head2 release_iterator()
@@ -293,7 +313,7 @@ Neil Bowers E<lt>neilb@cpan.orgE<gt>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2013 by Neil Bowers <neilb@cpan.org>.
+This software is copyright (c) 2013-2014 by Neil Bowers <neilb@cpan.org>.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.

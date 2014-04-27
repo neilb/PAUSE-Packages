@@ -1,5 +1,16 @@
 Revision history for Perl module PAUSE::Packages
 
+0.10 2014-04-27
+    - Updated documentation to describe that you can pass the path
+      attribute to the constructor. RT#93965.
+    - Noted that the 'path' attribute will split into two in a future release,
+      so the cache path and the path to a local copy are separate things,
+      as they should be.
+    - Dropped use of [MungeFile::WithData] to set package name in
+      PAUSE/Packages.pm -- the '{{ $dist->name }}' resulted in broken
+      cache filename when testing from the dev directory. I'm sure there's
+      a better way to fix this, but this is easiest for now.
+
 0.09 2014-02-26
     - Added CPAN::Common::Index to SEE ALSO (Thanks ETHER)
     - Added CPAN::PackageDetails to SEE ALSO
