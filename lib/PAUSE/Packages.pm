@@ -99,12 +99,20 @@ sub _cache_file_if_needed
     my $cache_creation_time = (stat($self->path))[9];
 
     if (-f $self->path) {
-        $options->{'If-Modified-Since'} = time2str($cache_creation_time );
+        if ( $self->ua->$_isa( 'HTTP::Tiny' ) ) {
+            $options->{headers}->{'If-Modified-Since'}
+                = time2str( $cache_creation_time );
+        }
+        else {
+            $options
+                = [ 'If-Modified-Since', time2str( $cache_creation_time ) ];
+        }
         my $uri = URI->new( $self->url );
         if ( $uri->scheme eq 'file' && -f $uri->path ) {
             return if ( (stat($uri->path))[9] < $cache_creation_time );
         }
     }
+
     my $response = $self->ua->get($self->url, $options);
     my $status   = $response->$_can('code') ? $response->code : $response->{status};
     return if $status == 304; # Not Modified
