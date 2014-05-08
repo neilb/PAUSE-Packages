@@ -16,6 +16,11 @@ use JSON;
 my $DISTNAME = 'PAUSE-Packages';
 my $BASENAME = '02packages.details.txt';
 
+has 'ua' => (
+    is      => 'ro',
+    default => sub { return HTTP::Tiny->new },
+);
+
 has 'url' =>
     (
      is      => 'ro',
@@ -88,17 +93,18 @@ sub _cache_file_if_needed
 {
     my $self    = shift;
     my $options = {};
-    my $ua      = HTTP::Tiny->new();
 
     if (-f $self->path) {
         $options->{'If-Modified-Since'} = time2str( (stat($self->path))[9]);
     }
-    my $response = $ua->get($self->url, $options);
+    my $response = $self->ua->get($self->url, $options);
+    my $status   = $response->can('code') ? $response->code : $response->{status};
+    return if $status == 304; # Not Modified
 
-    return if $response->{status} == 304; # Not Modified
-
-    if ($response->{status} == 200) {
-        $self->_transform_and_cache($response);
+    if ($status == 200) {
+        $self->_transform_and_cache( $response->can('content')
+            ? $response->content
+            : $response->{content} );
         return;
     }
 
@@ -107,12 +113,12 @@ sub _cache_file_if_needed
 
 sub _transform_and_cache
 {
-    my ($self, $response) = @_;
+    my ($self, $content) = @_;
     my $inheader = 1;
     my (%release, %other, $module, $version, $path, $distname);
 
     LINE:
-    while ($response->{content} =~ m!^(.*)$!gm) {
+    while ($content =~ m!^(.*)$!gm) {
         my $line = $1;
         if ($line =~ /^$/ && $inheader) {
             $inheader = 0;
@@ -181,8 +187,14 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
     print 'path = ', $release->path, "\n";
     print '   modules = ', join(', ', @{ $release->modules }), "\n";
   }
-  
+
   $release = $pp->release('Module-Path');
+
+  # to parse a local file
+    my $pp = PAUSE::Packages->new(
+        url => 'file:///path/to/02packages.details.txt',
+        ua  => LWP::UserAgent->new,
+    );
 
 =head1 DESCRIPTION
 
@@ -261,6 +273,21 @@ This saves you from having to write code like the following:
 
 Takes a dist name and returns an instance of L<PAUSE::Packages::Release>,
 or C<undef> if a release couldn't be found for the specified distname.
+
+=head2 ua( MyUserAgent->new )
+
+Allows you to provide your own UserAgent.  This is useful if you're working off
+a local copy of 02packages.details.txt  The default UserAgent is HTTP::Tiny,
+which does not support the file:// schema.  So, if you want to work with a
+local file you can either set up local web server using something like
+L<App::HTTPThis>, or you can provide a your own UserAgent (like
+L<LWP::UserAgent> which does support this behaviour.
+
+=head2 url
+
+The URL to the 02packages.details.txt which you would like to parse.  Defaults
+to cpan.org  If you want to use the file:// scheme to fetch your local package,
+be sure to provide your own UserAgent.  See the ua method above.
 
 =head1 NOTE
 
