@@ -1,5 +1,9 @@
 Revision history for Perl module PAUSE::Packages
 
+{{$NEXT}}
+    - Adds ua method for providing your own UserAgent.
+    - Documents previously secret "url" attribute.
+
 0.10 2014-04-27
     - Updated documentation to describe that you can pass the path
       attribute to the constructor. RT#93965.
@@ -24,7 +28,7 @@ Revision history for Perl module PAUSE::Packages
     - ReleaseIterator method next() renamed to next_release().
       The old name will be retained for a while, for back compat.
     - Added THALJEF's new module Parse::CPAN::Perms to SEE ALSO.
-      
+
 0.06 2013-11-26
     - Still had entry_iterator() function, which was referring to
       PAUSE::Packages::EntryIterator. Caused failures due to missing
