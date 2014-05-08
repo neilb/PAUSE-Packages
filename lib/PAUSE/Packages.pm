@@ -12,6 +12,7 @@ use PAUSE::Packages::Release;
 use Carp;
 use autodie qw(open);
 use JSON;
+use URI;
 
 my $DISTNAME = 'PAUSE-Packages';
 my $BASENAME = '02packages.details.txt';
@@ -94,8 +95,14 @@ sub _cache_file_if_needed
     my $self    = shift;
     my $options = {};
 
+    my $cache_creation_time = (stat($self->path))[9];
+
     if (-f $self->path) {
-        $options->{'If-Modified-Since'} = time2str( (stat($self->path))[9]);
+        $options->{'If-Modified-Since'} = time2str($cache_creation_time );
+        my $uri = URI->new( $self->url );
+        if ( $uri->scheme eq 'file' ) {
+            return if ( (stat($uri->path))[9] < $cache_creation_time );
+        }
     }
     my $response = $self->ua->get($self->url, $options);
     my $status   = $response->can('code') ? $response->code : $response->{status};
