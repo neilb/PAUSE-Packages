@@ -12,6 +12,7 @@ use PAUSE::Packages::Release;
 use Carp;
 use autodie qw(open);
 use JSON;
+use Safe::Isa;
 use URI;
 
 my $DISTNAME = 'PAUSE-Packages';
@@ -105,17 +106,18 @@ sub _cache_file_if_needed
         }
     }
     my $response = $self->ua->get($self->url, $options);
-    my $status   = $response->can('code') ? $response->code : $response->{status};
+    my $status   = $response->$_can('code') ? $response->code : $response->{status};
     return if $status == 304; # Not Modified
 
     if ($status == 200) {
-        $self->_transform_and_cache( $response->can('content')
+        $self->_transform_and_cache( $response->$_can('content')
             ? $response->content
             : $response->{content} );
         return;
     }
 
-    croak("request for 02packages failed: $response->{status} $response->{reason}");
+    my $reason = $response->$_can('message') ? $response->message : $response->{reason};
+    croak("request for 02packages failed: $status $reason");
 }
 
 sub _transform_and_cache
