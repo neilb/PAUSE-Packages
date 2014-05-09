@@ -115,11 +115,13 @@ sub _cache_file_if_needed
         else {
             $options = [ 'If-Modified-Since' => time2str( $cache_creation_time ) ];
         }
+
         my $uri = URI->new( $self->url );
-        if ( $uri->scheme eq 'file' && -f $uri->path ) {
-            if ( (stat($uri->path))[9] < $cache_creation_time ) {
-                $self->_set_from_cache( 1 );
-            }
+        if (   $uri->scheme eq 'file'
+            && -f $uri->path
+            && ( stat( $uri->path ) )[9] < $cache_creation_time )
+        {
+            $self->_set_from_cache( 1 );
         }
     }
 
