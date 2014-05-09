@@ -18,12 +18,12 @@ SKIP: {
 
     {
         my $pp = PAUSE::Packages->new();
-        ok( $pp->from_cache, 'is cached' );
+        ok( $pp->from_cache, 'is cached via HTTP::Tiny' );
     }
 
     {
         my $pp = PAUSE::Packages->new( ua => LWP::UserAgent->new);
-        ok( $pp->from_cache, 'is cached' );
+        ok( $pp->from_cache, 'is cached via LWP::UserAgent' );
     }
 
 }
