@@ -122,6 +122,7 @@ sub _cache_file_if_needed
             && ( stat( $uri->path ) )[9] < $cache_creation_time )
         {
             $self->_set_from_cache( 1 );
+            return;
         }
     }
 
