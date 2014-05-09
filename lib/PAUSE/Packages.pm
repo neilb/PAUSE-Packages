@@ -7,6 +7,7 @@ use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
 use CPAN::DistnameInfo;
+use MooX::Types::MooseLike::Base qw( Bool Object Str );
 use PAUSE::Packages::Module;
 use PAUSE::Packages::Release;
 use Carp;
@@ -18,21 +19,29 @@ use URI;
 my $DISTNAME = 'PAUSE-Packages';
 my $BASENAME = '02packages.details.txt';
 
-has 'ua' => (
+has from_cache => (
+    is       => 'rwp',
+    isa      => Bool,
+    init_arg => undef,
+);
+
+has ua => (
     is      => 'ro',
+    isa     => Object,
     default => sub { return HTTP::Tiny->new },
 );
 
-has 'url' =>
-    (
-     is      => 'ro',
-     default => sub { return 'http://www.cpan.org/modules/02packages.details.txt' },
-    );
+has url => (
+    is  => 'ro',
+    isa => Str,
+    default =>
+        sub { return 'http://www.cpan.org/modules/02packages.details.txt' },
+);
 
-has 'path' =>
-    (
-     is      => 'rw',
-    );
+has path => (
+    is  => 'rw',
+    isa => Str,
+);
 
 sub release_iterator
 {
@@ -94,7 +103,7 @@ sub BUILD
 sub _cache_file_if_needed
 {
     my $self    = shift;
-    my $options = {};
+    my $options;
 
     my $cache_creation_time = (stat($self->path))[9];
 
@@ -104,23 +113,30 @@ sub _cache_file_if_needed
                 = time2str( $cache_creation_time );
         }
         else {
-            $options
-                = [ 'If-Modified-Since', time2str( $cache_creation_time ) ];
+            $options = [ 'If-Modified-Since' => time2str( $cache_creation_time ) ];
         }
         my $uri = URI->new( $self->url );
         if ( $uri->scheme eq 'file' && -f $uri->path ) {
-            return if ( (stat($uri->path))[9] < $cache_creation_time );
+            if ( (stat($uri->path))[9] < $cache_creation_time ) {
+                $self->_set_from_cache( 1 );
+            }
         }
     }
 
-    my $response = $self->ua->get($self->url, $options);
+    my $response = $self->ua->get( $self->url,
+        $self->ua->$_isa( 'HTTP::Tiny' ) ? $options : @{$options} );
+
     my $status   = $response->$_can('code') ? $response->code : $response->{status};
-    return if $status == 304; # Not Modified
+    if ( $status == 304) { ; # Not Modified
+        $self->_set_from_cache( 1 );
+        return;
+    }
 
     if ($status == 200) {
         $self->_transform_and_cache( $response->$_can('content')
             ? $response->content
             : $response->{content} );
+        $self->_set_from_cache ( 0 );
         return;
     }
 
