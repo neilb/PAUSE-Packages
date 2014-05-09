@@ -8,7 +8,7 @@ use Test::Fatal;
 
 use LWP::UserAgent;
 use PAUSE::Packages;
-use Path::Class qw( dir );
+use Path::Class qw( file );
 use URI::FromHash qw( uri );
 
 #-----------------------------------------------------------------------
@@ -16,7 +16,7 @@ use URI::FromHash qw( uri );
 #-----------------------------------------------------------------------
 
 {
-    my $file = dir( 't', '02packages.details.txt' );
+    my $file = file( 't', '02packages.details.txt' );
     my $url = uri(
         path   => $file->absolute->stringify,
         scheme => 'file',
@@ -31,7 +31,7 @@ use URI::FromHash qw( uri );
 }
 
 {
-    my $file = dir( 'foo', '02packages.details.txt' );
+    my $file = file( 'foo', '02packages.details.txt' );
     my $url = uri(
         path   => $file->absolute->stringify,
         scheme => 'file',
