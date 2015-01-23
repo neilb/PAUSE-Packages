@@ -1,6 +1,6 @@
 Revision history for Perl module PAUSE::Packages
 
-{{$NEXT}}
+0.11 2015-01-23
     - Adds ua method for providing your own UserAgent.
     - Documents previously secret "url" attribute.
 
