@@ -7,25 +7,41 @@ use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
 use CPAN::DistnameInfo;
+use MooX::Types::MooseLike::Base qw( Bool Object Str );
 use PAUSE::Packages::Module;
 use PAUSE::Packages::Release;
 use Carp;
 use autodie qw(open);
 use JSON;
+use Safe::Isa;
+use URI;
 
 my $DISTNAME = 'PAUSE-Packages';
 my $BASENAME = '02packages.details.txt';
 
-has 'url' =>
-    (
-     is      => 'ro',
-     default => sub { return 'http://www.cpan.org/modules/02packages.details.txt' },
-    );
+has from_cache => (
+    is       => 'rwp',
+    isa      => Bool,
+    init_arg => undef,
+);
 
-has 'path' =>
-    (
-     is      => 'rw',
-    );
+has ua => (
+    is      => 'ro',
+    isa     => Object,
+    default => sub { return HTTP::Tiny->new },
+);
+
+has url => (
+    is  => 'ro',
+    isa => Str,
+    default =>
+        sub { return 'http://www.cpan.org/modules/02packages.details.txt' },
+);
+
+has path => (
+    is  => 'rw',
+    isa => Str,
+);
 
 sub release_iterator
 {
@@ -87,32 +103,58 @@ sub BUILD
 sub _cache_file_if_needed
 {
     my $self    = shift;
-    my $options = {};
-    my $ua      = HTTP::Tiny->new();
+    my $options;
+
+    my $cache_creation_time = (stat($self->path))[9];
 
     if (-f $self->path) {
-        $options->{'If-Modified-Since'} = time2str( (stat($self->path))[9]);
+        if ( $self->ua->$_isa( 'HTTP::Tiny' ) ) {
+            $options->{headers}->{'If-Modified-Since'}
+                = time2str( $cache_creation_time );
+        }
+        else {
+            $options = [ 'If-Modified-Since' => time2str( $cache_creation_time ) ];
+        }
+
+        my $uri = URI->new( $self->url );
+        if (   $uri->scheme eq 'file'
+            && -f $uri->path
+            && ( stat( $uri->path ) )[9] < $cache_creation_time )
+        {
+            $self->_set_from_cache( 1 );
+            return;
+        }
     }
-    my $response = $ua->get($self->url, $options);
 
-    return if $response->{status} == 304; # Not Modified
+    my $response = $self->ua->get( $self->url,
+        $self->ua->$_isa( 'HTTP::Tiny' ) ? $options : @{$options} );
 
-    if ($response->{status} == 200) {
-        $self->_transform_and_cache($response);
+    my $status   = $response->$_can('code') ? $response->code : $response->{status};
+    if ( $status == 304) { ; # Not Modified
+        $self->_set_from_cache( 1 );
         return;
     }
 
-    croak("request for 02packages failed: $response->{status} $response->{reason}");
+    if ($status == 200) {
+        $self->_transform_and_cache( $response->$_can('content')
+            ? $response->content
+            : $response->{content} );
+        $self->_set_from_cache ( 0 );
+        return;
+    }
+
+    my $reason = $response->$_can('message') ? $response->message : $response->{reason};
+    croak("request for 02packages failed: $status $reason");
 }
 
 sub _transform_and_cache
 {
-    my ($self, $response) = @_;
+    my ($self, $content) = @_;
     my $inheader = 1;
     my (%release, %other, $module, $version, $path, $distname);
 
     LINE:
-    while ($response->{content} =~ m!^(.*)$!gm) {
+    while ($content =~ m!^(.*)$!gm) {
         my $line = $1;
         if ($line =~ /^$/ && $inheader) {
             $inheader = 0;
@@ -181,8 +223,14 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
     print 'path = ', $release->path, "\n";
     print '   modules = ', join(', ', @{ $release->modules }), "\n";
   }
-  
+
   $release = $pp->release('Module-Path');
+
+  # to parse a local file
+    my $pp = PAUSE::Packages->new(
+        url => 'file:///path/to/02packages.details.txt',
+        ua  => LWP::UserAgent->new,
+    );
 
 =head1 DESCRIPTION
 
@@ -261,6 +309,21 @@ This saves you from having to write code like the following:
 
 Takes a dist name and returns an instance of L<PAUSE::Packages::Release>,
 or C<undef> if a release couldn't be found for the specified distname.
+
+=head2 ua( MyUserAgent->new )
+
+Allows you to provide your own UserAgent.  This is useful if you're working off
+a local copy of 02packages.details.txt  The default UserAgent is HTTP::Tiny,
+which does not support the file:// schema.  So, if you want to work with a
+local file you can either set up local web server using something like
+L<App::HTTPThis>, or you can provide a your own UserAgent (like
+L<LWP::UserAgent> which does support this behaviour.
+
+=head2 url
+
+The URL to the 02packages.details.txt which you would like to parse.  Defaults
+to cpan.org  If you want to use the file:// scheme to fetch your local package,
+be sure to provide your own UserAgent.  See the ua method above.
 
 =head1 NOTE
 
