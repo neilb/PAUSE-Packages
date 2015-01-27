@@ -1,18 +1,20 @@
 package PAUSE::Packages;
 
 use 5.10.0;
+use autodie qw(open);
+
 use Moo;
+
+use CPAN::DistnameInfo;
+use Carp;
 use File::HomeDir;
 use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
-use CPAN::DistnameInfo;
+use JSON;
 use MooX::Types::MooseLike::Base qw( Bool Object Str );
 use PAUSE::Packages::Module;
 use PAUSE::Packages::Release;
-use Carp;
-use autodie qw(open);
-use JSON;
 use Safe::Isa;
 use URI;
 
