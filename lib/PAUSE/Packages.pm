@@ -109,7 +109,7 @@ sub BUILD
 sub _cache_file_if_needed
 {
     my $self    = shift;
-    my $options;
+    my $options = $self->ua->$_isa( 'HTTP::Tiny' ) ? {} : [];
 
     my $cache_creation_time = (stat($self->path))[9];
 
