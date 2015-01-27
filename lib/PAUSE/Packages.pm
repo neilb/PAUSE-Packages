@@ -18,9 +18,9 @@ use Safe::Isa;
 use Types::URI -all;
 use Types::Standard qw( Bool Object Str );
 use URI;
+use URL::Encode qw( url_encode );
 
 my $DISTNAME = 'PAUSE-Packages';
-my $BASENAME = '02packages.details.txt';
 
 has from_cache => (
     is       => 'rwp',
@@ -98,7 +98,10 @@ sub BUILD
 
     # If constructor didn't specify a local file, then mirror the file from CPAN
     if (not $self->path) {
-        $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $BASENAME) );
+        # use a file name which is unique to the URI
+        my $cache_file_name = url_encode( $self->url );
+
+        $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $cache_file_name) );
         $self->_cache_file_if_needed();
     }
 }
