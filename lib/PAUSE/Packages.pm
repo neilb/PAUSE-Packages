@@ -97,7 +97,6 @@ sub BUILD
     # If constructor didn't specify a local file, then mirror the file from CPAN
     if (not $self->path) {
         $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $BASENAME) );
-        # HTTP::Tiny->new()->mirror($self->url, $self->path);
         $self->_cache_file_if_needed();
     }
 }
