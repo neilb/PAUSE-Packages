@@ -12,10 +12,11 @@ use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
 use JSON;
-use MooX::Types::MooseLike::Base qw( Bool Object Str );
 use PAUSE::Packages::Module;
 use PAUSE::Packages::Release;
 use Safe::Isa;
+use Types::URI -all;
+use Types::Standard qw( Bool Object Str );
 use URI;
 
 my $DISTNAME = 'PAUSE-Packages';
@@ -35,7 +36,8 @@ has ua => (
 
 has url => (
     is  => 'ro',
-    isa => Str,
+    isa => Uri,
+    coerce => 1,
     default =>
         sub { return 'http://www.cpan.org/modules/02packages.details.txt' },
 );
@@ -117,7 +119,9 @@ sub _cache_file_if_needed
             $options = [ 'If-Modified-Since' => time2str( $cache_creation_time ) ];
         }
 
-        my $uri = URI->new( $self->url );
+        my $uri = $self->url;
+        $uri->scheme( 'file' ) if !$uri->scheme;
+
         if (   $uri->scheme eq 'file'
             && -f $uri->path
             && ( stat( $uri->path ) )[9] < $cache_creation_time )
