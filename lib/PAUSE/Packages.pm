@@ -222,7 +222,7 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
 
 =head1 SYNOPSIS
 
-  use PAUSE::Packages 0.02;
+  use PAUSE::Packages 0.12;
 
   my $pp       = PAUSE::Packages->new;
   my $iterator = $pp->release_iterator();
