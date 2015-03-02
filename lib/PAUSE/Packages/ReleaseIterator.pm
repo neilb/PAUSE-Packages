@@ -5,7 +5,7 @@ use Moo;
 use PAUSE::Packages;
 use PAUSE::Packages::Release;
 use PAUSE::Packages::Module;
-use JSON;
+use JSON::MaybeXS;
 use autodie;
 use feature 'state';
 

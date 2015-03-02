@@ -11,7 +11,7 @@ use File::HomeDir;
 use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
-use JSON;
+use JSON::MaybeXS;
 use PAUSE::Packages::Module;
 use PAUSE::Packages::Release;
 use Safe::Isa;
