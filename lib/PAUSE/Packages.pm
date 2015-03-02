@@ -1,23 +1,26 @@
 package PAUSE::Packages;
 
 use 5.10.0;
+use autodie qw(open);
+
 use Moo;
+
+use CPAN::DistnameInfo;
+use Carp;
 use File::HomeDir;
 use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
-use CPAN::DistnameInfo;
-use MooX::Types::MooseLike::Base qw( Bool Object Str );
+use JSON;
 use PAUSE::Packages::Module;
 use PAUSE::Packages::Release;
-use Carp;
-use autodie qw(open);
-use JSON;
 use Safe::Isa;
+use Types::URI -all;
+use Types::Standard qw( Bool Object Str );
 use URI;
+use URL::Encode qw( url_encode );
 
 my $DISTNAME = 'PAUSE-Packages';
-my $BASENAME = '02packages.details.txt';
 
 has from_cache => (
     is       => 'rwp',
@@ -33,7 +36,8 @@ has ua => (
 
 has url => (
     is  => 'ro',
-    isa => Str,
+    isa => Uri,
+    coerce => 1,
     default =>
         sub { return 'http://www.cpan.org/modules/02packages.details.txt' },
 );
@@ -94,8 +98,10 @@ sub BUILD
 
     # If constructor didn't specify a local file, then mirror the file from CPAN
     if (not $self->path) {
-        $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $BASENAME) );
-        # HTTP::Tiny->new()->mirror($self->url, $self->path);
+        # use a file name which is unique to the URI
+        my $cache_file_name = url_encode( $self->url );
+
+        $self->path( catfile(File::HomeDir->my_dist_data( $DISTNAME, { create => 1 } ), $cache_file_name) );
         $self->_cache_file_if_needed();
     }
 }
@@ -103,7 +109,7 @@ sub BUILD
 sub _cache_file_if_needed
 {
     my $self    = shift;
-    my $options;
+    my $options = $self->ua->$_isa( 'HTTP::Tiny' ) ? {} : [];
 
     my $cache_creation_time = (stat($self->path))[9];
 
@@ -116,7 +122,9 @@ sub _cache_file_if_needed
             $options = [ 'If-Modified-Since' => time2str( $cache_creation_time ) ];
         }
 
-        my $uri = URI->new( $self->url );
+        my $uri = $self->url;
+        $uri->scheme( 'file' ) if !$uri->scheme;
+
         if (   $uri->scheme eq 'file'
             && -f $uri->path
             && ( stat( $uri->path ) )[9] < $cache_creation_time )
@@ -214,7 +222,7 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
 
 =head1 SYNOPSIS
 
-  use PAUSE::Packages 0.02;
+  use PAUSE::Packages 0.12;
 
   my $pp       = PAUSE::Packages->new;
   my $iterator = $pp->release_iterator();
