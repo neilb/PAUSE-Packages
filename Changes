@@ -1,6 +1,11 @@
 Revision history for Perl module PAUSE::Packages
 
 {{$NEXT}}
+    - Set minimum version of Moo to 1.004005, to address CPAN Testers fails.
+      Eg http://www.cpantesters.org/cpan/report/e3da2a54-c260-11e4-8a69-fbd67d3e1735
+      OALDERS++
+
+0.13 2015-03-03 NEILB
     - Switch to use JSON::MaybeXS instead of JSON, as the front-end for
       JSON processing. Thanks to ETHER.
 
