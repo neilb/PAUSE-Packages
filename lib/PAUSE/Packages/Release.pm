@@ -1,7 +1,7 @@
 package PAUSE::Packages::Release;
 
 use 5.10.0;
-use Moo 1.004005;
+use Moo 1.006;
 use CPAN::DistnameInfo;
 
 has 'modules' => (is => 'ro');

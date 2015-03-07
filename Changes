@@ -1,6 +1,8 @@
 Revision history for Perl module PAUSE::Packages
 
 {{$NEXT}}
+    - Set min version of Moo to 1.006 after reading the Changes file for Moo,
+      which I should have done before, rather than trust OALDERS :-)
 
 0.14 2015-03-05 NEILB
     - Set minimum version of Moo to 1.004005, to address CPAN Testers fails.

@@ -1,7 +1,7 @@
 package PAUSE::Packages::ReleaseIterator;
 
 use 5.10.0;
-use Moo 1.004005;
+use Moo 1.006;
 use PAUSE::Packages;
 use PAUSE::Packages::Release;
 use PAUSE::Packages::Module;
