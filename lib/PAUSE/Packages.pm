@@ -7,7 +7,7 @@ use Moo 1.006;
 
 use CPAN::DistnameInfo;
 use Carp;
-use File::HomeDir;
+use File::HomeDir 0.93;
 use File::Spec::Functions 'catfile';
 use HTTP::Date qw(time2str);
 use HTTP::Tiny;
