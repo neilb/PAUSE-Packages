@@ -3,6 +3,7 @@ Revision history for Perl module PAUSE::Packages
 {{$NEXT}}
     - Require at least version 0.93 of File::HomeDir, which is needed
       for my_dist_data(). Thanks to MANWAR for the Pull Request.
+    - Added [MetaJSON] to dist.ini so releases will contain a META.json file.
     - Updated github repo URL after changing my github username.
 
 0.15 2015-03-07 NEILB
