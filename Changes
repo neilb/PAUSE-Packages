@@ -1,6 +1,10 @@
 Revision history for Perl module PAUSE::Packages
 
 {{$NEXT}}
+    - Require at least version 0.93 of File::HomeDir, which is needed
+      for my_dist_data(). Thanks to MANWAR for the Pull Request.
+
+0.15 2015-03-07 NEILB
     - Set min version of Moo to 1.006 after reading the Changes file for Moo,
       which I should have done before, rather than trust OALDERS :-)
 
