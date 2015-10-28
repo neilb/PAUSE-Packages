@@ -376,7 +376,7 @@ L<CPAN::PackageDetails> - can be used to read an existing copy of
 
 =head1 REPOSITORY
 
-L<https://github.com/neilbowers/PAUSE-Packages>
+L<https://github.com/neilb/PAUSE-Packages>
 
 =head1 AUTHOR
 
