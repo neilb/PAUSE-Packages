@@ -1,7 +1,7 @@
 package PAUSE::Packages;
 
-use 5.10.0;
-use autodie qw(open);
+use 5.8.1;
+use autodie 2.29 qw(open);
 
 use Moo 1.006;
 

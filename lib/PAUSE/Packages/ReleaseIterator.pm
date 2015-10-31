@@ -1,13 +1,12 @@
 package PAUSE::Packages::ReleaseIterator;
 
-use 5.10.0;
+use 5.8.1;
 use Moo 1.006;
 use PAUSE::Packages;
 use PAUSE::Packages::Release;
 use PAUSE::Packages::Module;
 use JSON::MaybeXS;
-use autodie;
-use feature 'state';
+use autodie 2.29;
 
 has 'packages' =>
     (
