@@ -1,6 +1,8 @@
 Revision history for Perl module PAUSE::Packages
 
 {{$NEXT}}
+
+0.17 2015-10-31 NEILB
     - After looking at CPAN Testers results, realised I was requiring
       Perl 5.10 needlessly. Have tested on 5.8.9, but set required to
       5.8.1, which I suspect is true. Will see if CPAN Testers agrees.
