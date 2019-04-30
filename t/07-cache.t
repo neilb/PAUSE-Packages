@@ -27,7 +27,7 @@ use URI::FromHash qw( uri );
         url => $url,
     );
 
-    ok( $pp->from_cache );
+    ok( $pp->from_cache, 'URL is cached locally' );
 }
 
 {
@@ -37,7 +37,7 @@ use URI::FromHash qw( uri );
 	path => "$file",
     );
 
-    ok( ! $pp->from_cache );
+    ok( ! $pp->from_cache, 'Path is not cached locally' );
 }
 
 done_testing();
