@@ -1,6 +1,7 @@
 Revision history for Perl module PAUSE::Packages
 
 {{$NEXT}}
+    - Fixed the SYNOPSIS in the doc. PR from Olaf Alders.
 
 0.17 2015-10-31 NEILB
     - After looking at CPAN Testers results, realised I was requiring
