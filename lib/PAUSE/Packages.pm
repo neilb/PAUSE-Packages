@@ -229,7 +229,7 @@ PAUSE::Packages - interface to PAUSE's packages file (02packages.details.txt)
 
   while (my $release = $iterator->next_release) {
     print 'path = ', $release->path, "\n";
-    print '   modules = ', join(', ', @{ $release->modules }), "\n";
+    print '   modules = ', join( ', ', map { $_->name } @{ $release->modules } ), "\n";
   }
 
   $release = $pp->release('Module-Path');
