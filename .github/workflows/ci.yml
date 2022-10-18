@@ -1,4 +1,4 @@
-name: Perl
+name: CI
 
 on:
   push:
@@ -42,24 +42,24 @@ jobs:
         dzil authordeps --missing | cpanm --notest
         dzil listdeps --missing | cpanm --notest
 
-   - name: Show Errors on Windows
+    - name: Show Errors on Windows
       if:  ${{ failure() && startsWith( matrix.runner, 'windows-')}}
       run: |
          ls -l C:/Users/
          ls -l C:/Users/RUNNER~1/
          cat C:/Users/runneradmin/.cpanm/work/*/build.log
 
-   - name: Show Errors on Ubuntu
-     if:  ${{ failure() && startsWith( matrix.runner, 'ubuntu-')}}
-     run: |
-        cat /home/runner/.cpanm/work/*/build.log
+    - name: Show Errors on Ubuntu
+      if:  ${{ failure() && startsWith( matrix.runner, 'ubuntu-')}}
+      run: |
+         cat /home/runner/.cpanm/work/*/build.log
 
-   - name: Show Errors on OSX
-     if:  ${{ failure() && startsWith( matrix.runner, 'macos-')}}
-     run: |
-        cat  /Users/runner/.cpanm/work/*/build.log
+    - name: Show Errors on OSX
+      if:  ${{ failure() && startsWith( matrix.runner, 'macos-')}}
+      run: |
+         cat  /Users/runner/.cpanm/work/*/build.log
 
-   - name: Run tests
-     run: |
-       dzil test
+    - name: Run tests
+      run: |
+        dzil test
 
