@@ -315,7 +315,7 @@ This saves you from having to write code like the following:
 
 =head2 release($DISTNAME)
 
-Takes a dist name and returns an instance of L<PAUSE::Packages::Release>,
+Takes a dist name like C<PAUSE-Packages>  (see also L<CPAN::DistnameInfo>) and returns an instance of L<PAUSE::Packages::Release>,
 or C<undef> if a release couldn't be found for the specified distname.
 
 =head2 ua( MyUserAgent->new )
